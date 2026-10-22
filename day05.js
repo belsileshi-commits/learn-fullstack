@@ -164,3 +164,90 @@ function makeAdder(amount){
 const addTen = makeAdder(10);
 console.log(addTen(5));
 
+function makeDiscountCalculator(Percent) {
+  return function(price) {
+    const discount = price * (Percent / 100);
+    return price - discount;
+  }
+
+}
+const tenPercentDiscount = makeDiscountCalculator(10);
+const twentyPercentDiscount = makeDiscountCalculator(20);
+console.log(tenPercentDiscount(100)); 
+console.log(twentyPercentDiscount(100));
+
+function makePrifixer(prefix) {
+  return function(text) {
+    return prefix + text;
+  }
+}
+const batteryWarning = makePrifixer("warning: ");
+console.log(batteryWarning("low battery")); // Output: "warning: low battery"
+function createWallet(initialBalance) {
+  let balance = initialBalance;
+  return {
+    getBalance: () => balance,
+    deposit: (amount) => {
+      balance += amount;
+    },
+    withdraw: (amount) => {
+      if (amount <= balance) {
+        balance -= amount;
+      }
+    }
+  };
+}
+
+const myWallet = createWallet(100);
+console.log(myWallet.getBalance()); // Output: 100
+myWallet.deposit(50);
+console.log(myWallet.getBalance()); // Output: 150
+myWallet.withdraw(30);
+console.log(myWallet.getBalance()); // Output: 120  
+/* Update remembered state: makeIdGenerator(start)
+Return a function that gives you the next ID each time it’s called.
+Test: make one generator starting at 0 and another starting at 100;
+ call each several times and check that their sequences stay separate*/
+ 
+ function makeIdGenerator(start) {
+  let currentId = start;
+  return function() {
+    const id = currentId;
+   
+    currentId++;
+    return id ;
+  }
+}
+const idGenerator1 = makeIdGenerator(0);
+const idGenerator2 = makeIdGenerator(100);
+console.log(idGenerator1()); // Output: 0
+console.log(idGenerator1()); // Output: 1
+console.log(idGenerator2()); // Output: 100
+console.log(idGenerator2()); // Output: 101
+
+/* Use remembered data later: makeDelayedLogger(message)
+Return a function that logs the remembered message after a one-second delay using setTimeout. */
+function makeDelayedLogger(message) {
+  return function() {
+    setTimeout(() => {
+      console.log(message);
+    }, 1000);
+  };
+}
+const delayedLogger = makeDelayedLogger("Hello, world!");
+delayedLogger();  
+/* Wrap another function: once(fn)
+Return a function that runs fn only the first time it’s called. Forward any arguments to fn; later calls should do nothing.
+Test: wrap a function that prints a name, then call the wrapper twice with different names. */
+function once(fn) {
+  let called = false;     
+  return function(...args) {
+    if (!called) {
+      called = true;
+      return fn(...args);
+    }
+  };
+}
+const greetingOnce = once((name) => `Hello, ${name}!`);
+console.log(greetingOnce("Abel"));
+console.log(greetingOnce("John"));
